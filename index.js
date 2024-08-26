@@ -3,6 +3,7 @@ const cors = require('cors')
 // const mongoose = require('mongoose')
 var bodyParser = require('body-parser')
 const productController = require('./controllers/productController')
+const userController = require('./controllers/userController')
 const app = express()
 const port = 3001
 app.use(cors())
@@ -34,7 +35,11 @@ app.get('/get-products', productController.getProducts);
 app.post('/edit-product', productController.editProduct);
 app.get('/get-product/:id', productController.getProductById);
 app.post('/delete-products', productController.deleteProducts);
+app.post('/signup', userController.signUp);
+app.post('/login', userController.logIn);
 
+app.post('/add-to-cart', userController.addToCart);
+app.post('/get-cart', userController.getCart);
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
