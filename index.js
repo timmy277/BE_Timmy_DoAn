@@ -1,46 +1,25 @@
 const express = require('express')
 const cors = require('cors')
-// const mongoose = require('mongoose')
-var bodyParser = require('body-parser')
-const productController = require('./controllers/productController')
-const userController = require('./controllers/userController')
+const cookieParser = require('cookie-parser')
+
+require('dotenv').config()
+
+const connectDB = require('./db');
+const router = require('./routes');
+
 const app = express()
-const port = 3001
 app.use(cors())
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-
-const db = require('./db');
+app.use(express.json())
+app.use(cookieParser()) 
 
 
+app.use("/api",router)
 
-app.get('/products', (req, res) => {
-    const data = [
-        {
-            url: 'acx',
-            name: 'ACX',
-            description: 'aaaa'
-        },{
-            url: 'acxq',
-            name: 'wACX',
-            description: 'tttaaaa'
-        }
-    ]
-    res.send({code: 200, message: 'Fetch success', data: data})
+const PORT = process.env.PORT ||  8080
+
+connectDB().then(()=>{
+    app.listen(PORT, () => {
+        console.log('MongoDB connected successfully');
+        console.log(`Example app listening on port ${PORT}`)
+    })  
 })
-
-
-app.post('/add-product', productController.addProduct);
-app.get('/get-products', productController.getProducts);
-app.post('/edit-product', productController.editProduct);
-app.get('/get-product/:id', productController.getProductById);
-app.post('/delete-products', productController.deleteProducts);
-app.post('/signup', userController.signUp);
-app.post('/login', userController.logIn);
-
-app.post('/add-to-cart', userController.addToCart);
-app.post('/get-cart', userController.getCart);
-
-app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`)
-})  
