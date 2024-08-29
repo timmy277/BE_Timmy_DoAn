@@ -1,6 +1,6 @@
 const bcryptjs = require('bcryptjs')
 const userModel = require('../models/userModel')
-
+const jwt = require('jsonwebtoken')
 
 async function userLogInController(req, res) {
     try{
@@ -21,11 +21,25 @@ async function userLogInController(req, res) {
         }
         
         const checkPassword = await bcryptjs.compare(password, user.password)
-        console.log(password)
-        console.log(user.password)
-        console.log("checkPassword",checkPassword)
         if(checkPassword){
-            res.send({success:true})
+            const tokenData = {
+                _id: user._id,
+                email: user.email,
+            }
+            const token = await jwt.sign(tokenData, process.env.TOKEN_SECRET_KEY, {expiresIn: 60 * 60 * 8})
+
+            const tokenOptions = {
+                httpOnly: true,
+                secure: true,
+                sameSite: 'none'
+            }
+
+            res.cookie('token', token, tokenOptions).json({
+                message: 'User logged in successfully',
+                data: token,
+                success: true,
+                error: false
+            })
         }
         else{
             throw new Error('Incorrect password', user.password, password)

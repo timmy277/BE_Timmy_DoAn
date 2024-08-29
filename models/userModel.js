@@ -11,12 +11,12 @@ const userSchema = new Schema({
     },
     type: String,
     password: String,
+    role: String,
     // cart: [
     //     {
     //         type: mongoose.Schema.Types.ObjectId , ref: 'products'
     //     }
     // ],
-    // roles: [{ type: String, ref: 'roles'}],
 }, {
     timestamps : true
 }); 
