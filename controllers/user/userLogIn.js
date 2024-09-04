@@ -1,32 +1,31 @@
 const bcryptjs = require('bcryptjs')
-const userModel = require('../models/userModel')
+const userModel = require('../../models/userModel')
 const jwt = require('jsonwebtoken')
 
 async function userLogInController(req, res) {
-    try{
+    try {
 
-        const { email , password} = req.body
+        const { email, password } = req.body
 
-        if(!email){
+        if (!email) {
             throw new Error("Please provide email")
         }
-        if(!password){
+        if (!password) {
             throw new Error("Please provide password")
         }
 
-        const user = await userModel.findOne({email})
-        console.log(user)
-        if(!user){
+        const user = await userModel.findOne({ email })
+        if (!user) {
             throw new Error("User not found")
         }
-        
+
         const checkPassword = await bcryptjs.compare(password, user.password)
-        if(checkPassword){
+        if (checkPassword) {
             const tokenData = {
                 _id: user._id,
                 email: user.email,
             }
-            const token = await jwt.sign(tokenData, process.env.TOKEN_SECRET_KEY, {expiresIn: 60 * 60 * 8})
+            const token = await jwt.sign(tokenData, process.env.TOKEN_SECRET_KEY, { expiresIn: 60 * 60 * 8 })
 
             const tokenOptions = {
                 httpOnly: true,
@@ -41,12 +40,12 @@ async function userLogInController(req, res) {
                 error: false
             })
         }
-        else{
+        else {
             throw new Error('Incorrect password', user.password, password)
             console.log(user.password, password)
         }
     }
-    catch(err){
+    catch (err) {
         res.json({
             message: err.message || err,
             error: true,

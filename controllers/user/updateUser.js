@@ -1,4 +1,5 @@
-const userModel = require("../models/userModel")
+const userModel = require("../../models/userModel")
+
 
 async function updateUserController(req, res) {
     try {
