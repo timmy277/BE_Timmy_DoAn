@@ -12,9 +12,13 @@ const getCategoryProductController = async (req, res) =>{
                 getProductByCategory.push(product)
             }
         }
+        const filteredProducts = getProductByCategory.filter(Boolean);
+        filteredProducts.shift();//Loại bỏ phần tử đầu
+
+        // console.log("getProductByCategory",getProductByCategory)
 
         res.status(200).json({
-            data: getProductByCategory,
+            data: filteredProducts,
             error: false,
             success: true,
             message: "Get category product successfully"

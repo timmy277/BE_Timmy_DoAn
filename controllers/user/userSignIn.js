@@ -2,7 +2,7 @@ const bcryptjs = require('bcryptjs')
 const userModel = require('../../models/userModel')
 const jwt = require('jsonwebtoken')
 
-async function userLogInController(req, res) {
+async function userSignInController(req, res) {
     try {
 
         const { email, password } = req.body
@@ -42,7 +42,6 @@ async function userLogInController(req, res) {
         }
         else {
             throw new Error('Incorrect password', user.password, password)
-            console.log(user.password, password)
         }
     }
     catch (err) {
@@ -54,4 +53,4 @@ async function userLogInController(req, res) {
     }
 }
 
-module.exports = userLogInController 
+module.exports = userSignInController 
