@@ -21,8 +21,13 @@ app.use(
 app.options('*', cors());
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
+    res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
     next();
 });
+app.get('/', (req, res) => {
+    res.send('Referrer-Policy set to strict-origin-when-cross-origin');
+});
+
 app.use(express.json({ limit: '10mb' }))
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
 app.use(cookieParser())
