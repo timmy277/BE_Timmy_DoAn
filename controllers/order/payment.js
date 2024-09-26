@@ -1,14 +1,10 @@
 const stripe = require('../../config/stripe')
 const userModel = require('../../models/userModel')
-
 const paymentController = async(request,response)=>{
     try {
         const { cartItems } = request.body
-
-        console.log("cartItems",cartItems)
-
+        // console.log("cartItems",cartItems)
         const user = await userModel.findOne({ _id : request.userId })
-
         const params = {
             submit_type : 'pay',
             mode : "payment",
@@ -34,7 +30,8 @@ const paymentController = async(request,response)=>{
                             productId : item.productId._id
                         }
                       },
-                      unit_amount : item.productId.sellingPrice * 100
+                    //   unit_amount : item.productId.sellingPrice * 100
+                    unit_amount : item.productId.sellingPrice
                     },
                     adjustable_quantity : {
                         enabled : true,
@@ -46,11 +43,8 @@ const paymentController = async(request,response)=>{
             success_url : `${process.env.FRONTEND_URL}/success`,
             cancel_url : `${process.env.FRONTEND_URL}/cancel`,
         }
-
         const session = await stripe.checkout.sessions.create(params)
-
-        response.status(303).json(session)
-
+        response.status(200).json(session)
     } catch (error) {
         response.json({
             message : error?.message || error,
@@ -59,5 +53,4 @@ const paymentController = async(request,response)=>{
         })
     }
 }
-
 module.exports = paymentController
