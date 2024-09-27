@@ -7,16 +7,20 @@ async function userSignInController(req, res) {
 
         const { email, password } = req.body
 
-        if (!email) {
-            throw new Error("Please provide email")
-        }
-        if (!password) {
-            throw new Error("Please provide password")
-        }
+        // if (!email) {
+        //     throw new Error("Please provide email")
+        // }
+        // if (!password) {
+        //     throw new Error("Please provide password")
+        // }
 
         const user = await userModel.findOne({ email })
         if (!user) {
-            throw new Error("User not found")
+            return res.status(200).json({
+                message: 'User not found',
+                error: true,
+                success: false,
+            });
         }
 
         const checkPassword = await bcryptjs.compare(password, user.password)

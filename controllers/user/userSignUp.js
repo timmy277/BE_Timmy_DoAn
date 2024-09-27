@@ -9,18 +9,13 @@ async function userSignUpController(req, res) {
         const user = await userModel.findOne({ email })
 
         if (user) {
-            throw new Error('User already exists')
+            return res.status(200).json({
+                message: 'User already exists',
+                error: true,
+                success: false,
+            });
         }
-        if (!name) {
-            throw new Error('Name is required')
 
-        }
-        else if (!email) {
-            throw new Error('Email is required')
-        }
-        else if (!password) {
-            throw new Error('Password is required')
-        }
 
         const salt = bcryptjs.genSaltSync(10);
         const hashPassword = await bcryptjs.hashSync(password, salt);
@@ -48,7 +43,7 @@ async function userSignUpController(req, res) {
 
     }
     catch (err) {
-        res.json({
+        res.status(400).json({
             message: err.message || err,
             error: true,
             success: false,
